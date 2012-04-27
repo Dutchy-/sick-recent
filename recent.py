@@ -4,6 +4,8 @@ import datetime
 import os
 import os.path
 
+# Announce
+ANNOUNCE = True
 # location of the recent series directory
 RECENT = '/home/dutchy/shares/mirrorpush'
 # days
@@ -46,6 +48,8 @@ def unlink():
 def link(final, airdate):
 	print("Checking episode {0}".format(final))
 	if check_date(get_date(airdate)):
+		if ANNOUNCE: announce(final, airdate)
+			
 		print("Air date {0} within {1} days, linking".format(airdate, AIRED_WITHIN))
 		linkname = os.path.join(RECENT, os.path.basename(final))
 		if not os.path.exists(linkname):
@@ -61,6 +65,10 @@ def link(final, airdate):
 		print("Air date {0} not within {1} days, not linking".format(airdate, AIRED_WITHIN))
 		# What do we do with older episodes?
 	return
+
+def announce(final, airdate):
+	from announce import announce
+	announce(final, airdate)
 
 def get_ctime(file):
 	return datetime.datetime.fromtimestamp(os.path.getctime(file))
